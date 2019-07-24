@@ -32,7 +32,7 @@ neighbors n (Tuple x y) = [ Tuple (x-1) (y-1), Tuple x (y-1), Tuple (x+1) (y-1)
                           ] # map (wrap n)
 
 wrap :: Width -> Pos -> Pos
-wrap n (Tuple x' y') = (Tuple (x' `mod` n) (y' `mod` n))
+wrap n (Tuple x y) = Tuple (x `mod` n) (y `mod` n)
 
 score :: Width -> Array Pos -> Pos -> Int
 score n lives = length <<< intersect lives <<< neighbors n

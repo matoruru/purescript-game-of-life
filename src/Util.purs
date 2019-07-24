@@ -21,11 +21,11 @@ logNoNewline = runEffectFn1 logNoNewlineImpl
 showPattern :: Width -> Array Pos -> Effect Unit
 showPattern n ps = do
   traverse_ ( \p -> case elem p ps of
-                true  -> logNoNewline $ "*" <> newLine p n
-                false -> logNoNewline $ "_" <> newLine p n
+                true  -> logNoNewline $ "*" <> newLine
+                false -> logNoNewline $ "_" <> newLine
             ) (wholeBoard n)
     where
-      newLine p' n' = if (snd p' == (n' - 1)) then "\n" else ""
+      newLine = if (snd p == (n - 1)) then "\n" else ""
 
 wholeBoard :: Width -> Array Pos
 wholeBoard n = do

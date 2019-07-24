@@ -6,7 +6,7 @@ module Util
 import Prelude
 
 import Data.Array (elem, sort, (..))
-import Data.Tuple (Tuple(..), snd)
+import Data.Tuple (Tuple(..), snd, swap)
 import Effect (Effect, foreachE)
 import Effect.Uncurried (EffectFn1, runEffectFn1)
 import Type (Width, Pos)
@@ -20,9 +20,9 @@ logNoNewline = runEffectFn1 logNoNewlineImpl
 
 showPattern :: Width -> Array Pos -> Effect Unit
 showPattern n ps = do
-  foreachE ( map ( \p -> case elem p ps of
+  foreachE ( map ( \p -> case elem (swap p) ps of
                            true  -> "■"
-                           false -> " "
+                           false -> "□"
                          <> if snd p == n - 1 then "\n" else ""
                  ) <<< wholeBoard $ n
            ) logNoNewline

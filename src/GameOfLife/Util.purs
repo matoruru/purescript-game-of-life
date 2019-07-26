@@ -1,6 +1,7 @@
 module GameOfLife.Util
   ( consoleClear
   , showPattern
+  , move
   ) where
 
 import Prelude
@@ -30,3 +31,6 @@ wholeBoard w = do
   x <- 0 .. (w - 1)
   y <- 0 .. (w - 1)
   sort [ Tuple x y ]
+
+move :: Int -> Int -> Pattern -> Pattern
+move x y = map (_ + Tuple x y)

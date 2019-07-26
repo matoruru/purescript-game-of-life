@@ -9,7 +9,7 @@ blinker :: Pattern
 blinker = [ Tuple 0 0, Tuple 0 1, Tuple 0 2 ]
 
 trafficLight :: Pattern
-trafficLight = [ Tuple 0 3, Tuple 0 4, Tuple 0 5, Tuple 5 0, Tuple 5 1, Tuple 5 2, Tuple 8 3, Tuple 8 4, Tuple 8 5, Tuple 5 6, Tuple 5 7, Tuple 5 8 ]
+trafficLight = [ Tuple 0 3, Tuple 0 4, Tuple 0 5, Tuple 4 0, Tuple 4 1, Tuple 4 2, Tuple 8 3, Tuple 8 4, Tuple 8 5, Tuple 4 6, Tuple 4 7, Tuple 4 8 ]
 
 
 -- period 8

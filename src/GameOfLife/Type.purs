@@ -2,7 +2,10 @@ module GameOfLife.Type where
 
 import Data.Tuple (Tuple)
 
-type Width = Int
+type FieldSize
+  = { w :: Int
+    , h :: Int
+    }
 
 type Pos = Tuple Int Int
 

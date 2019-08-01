@@ -7,22 +7,22 @@ import Prelude
 
 import Data.Array (concat, filter, intersect, length, nubEq)
 import Data.Tuple (Tuple(..))
-import GameOfLife.Type (Pos, Width, Pattern)
+import GameOfLife.Type (Pos, FieldSize, Pattern)
 
-nextGen :: Width -> Pattern -> Pattern
-nextGen w lives = concat >>> nubEq $ [ keeps, births ]
+nextGen :: FieldSize -> Pattern -> Pattern
+nextGen fs lives = concat >>> nubEq $ [ keeps, births ]
   where
-    keeps  = filter (score w lives >>> (==) 2) lives
-    births = filter (score w lives >>> (==) 3) $ map (neighbors w) >>> concat $ lives
+    keeps  = filter (score fs lives >>> (==) 2) lives
+    births = filter (score fs lives >>> (==) 3) $ map (neighbors fs) >>> concat $ lives
 
-score :: Width -> Pattern -> Pos -> Int
-score w lives = length <<< intersect lives <<< neighbors w
+score :: FieldSize -> Pattern -> Pos -> Int
+score fs lives = length <<< intersect lives <<< neighbors fs
 
-neighbors :: Width -> Pos -> Pattern
-neighbors w (Tuple x y) = [ Tuple (x-1) (y-1), Tuple x (y-1), Tuple (x+1) (y-1)
-                          , Tuple (x-1) (y  ),                Tuple (x+1) (y  )
-                          , Tuple (x-1) (y+1), Tuple x (y+1), Tuple (x+1) (y+1)
-                          ] # map (wrap w)
+neighbors :: FieldSize -> Pos -> Pattern
+neighbors fs (Tuple x y) = [ Tuple (x-1) (y-1), Tuple x (y-1), Tuple (x+1) (y-1)
+                           , Tuple (x-1) (y  ),                Tuple (x+1) (y  )
+                           , Tuple (x-1) (y+1), Tuple x (y+1), Tuple (x+1) (y+1)
+                           ] # map (wrap fs)
 
-wrap :: Width -> Pos -> Pos
-wrap w (Tuple x y) = Tuple (x `mod` w) (y `mod` w)
+wrap :: FieldSize -> Pos -> Pos
+wrap fs (Tuple x y) = Tuple (x `mod` fs.w) (y `mod` fs.h)

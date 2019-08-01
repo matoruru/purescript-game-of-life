@@ -8,8 +8,9 @@ import Effect (Effect, foreachE)
 import Effect.Timer (setTimeout)
 import Effect.Uncurried (EffectFn1, runEffectFn1)
 import GameOfLife.Pattern as P
-import GameOfLife.Rule (nextGen)
-import GameOfLife.Type (Pattern, Width, Pos)
+import GameOfLife.Rule (nextGen, wrap)
+import GameOfLife.Type (Pattern, Pos, FieldSize)
+import GameOfLife.Util (move)
 
 foreign import consoleClear :: Effect Unit
 
@@ -25,57 +26,48 @@ foreign import getColumns :: Effect Int
 main :: Effect Unit
 main = loop field
 
-field :: Pattern
-field = concat [ move 30  3 P.glider
-               , move 30  8 P.glider
-               , move 30 13 P.glider
-               , move 30 19 P.glider
-               , move 30 25 P.glider
-               , move 30 30 P.glider
-               , move 30 39 P.glider
-               , move 30 48 P.glider
-               , P.nebula
-               , move  0 15 P.nebula
-               , move  0 35 P.nebula
-               , move 15 28 P.trafficLight
-               ]
-
 loop :: Pattern -> Effect Unit
 loop ps = do
-  w   <- width
+  fs  <- fieldSize
   t   <- interval
-  ps' <- pure $ map (wrap w) ps
-  _   <- setTimeout t $ consoleClear *> showPattern w ps' *> loop (nextGen w ps')
+  ps' <- pure $ map (wrap fs) ps
+  _   <- setTimeout t $ consoleClear *> showPattern fs ps' *> loop (nextGen fs ps')
   pure unit
 
-width :: Effect Width
-width = getColumns
+fieldSize :: Effect FieldSize
+fieldSize = do
+  w' <- getColumns
+  h' <- getRows
+  pure { w: w', h: h' }
 
 interval :: Effect Int
-interval = pure 100
-
-wrap :: Width -> Pos -> Pos
-wrap w (Tuple x y) = Tuple (x `mod` w) (y `mod` w)
+interval = pure 10
 
 field :: Pattern
-field = concat [ P.glider ]
+field = concat [ move 10 30 P.glider
+               , move 5  7  P.glider
+               , move 50 78 P.nebula
+               , move 70 88 P.pulsar
+               , move 30 30 P.airclaftCarrier
+               , move 27 20 P.beeHive
+               ]
 
-showPattern :: Width -> Pattern -> Effect Unit
-showPattern w ps = do
-  foreachE (map (getCell ps <> newLine w) <<< wholeBoard $ w) logNoNewline
+showPattern :: FieldSize -> Pattern -> Effect Unit
+showPattern fs ps = do
+  foreachE (map (getCell ps <> newLine fs) <<< wholeBoard $ fs) logNoNewline
 
 getCell :: Pattern -> Pos -> String
 getCell ps p = case swap p `elem` ps of
                  true  -> "■"
                  false -> "□"
 
-newLine :: Width -> Pos -> String
-newLine w p = case snd p == w - 1 of
+newLine :: FieldSize -> Pos -> String
+newLine fs p = case snd p == fs.w - 1 of
                 true  -> "\n"
                 false -> ""
 
-wholeBoard :: Width -> Pattern
-wholeBoard w = do
-  x <- 0 .. (w - 1)
-  y <- 0 .. (w - 1)
+wholeBoard :: FieldSize -> Pattern
+wholeBoard fs = do
+  x <- 0 .. (fs.h - 1)
+  y <- 0 .. (fs.w - 1)
   sort [ Tuple x y ]

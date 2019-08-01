@@ -1,4 +1,7 @@
-module GameOfLife.Rule ( nextGen, wrap, move ) where
+module GameOfLife.Rule
+  ( nextGen
+  , wrap
+  ) where
 
 import Prelude
 
@@ -23,6 +26,3 @@ neighbors w (Tuple x y) = [ Tuple (x-1) (y-1), Tuple x (y-1), Tuple (x+1) (y-1)
 
 wrap :: Width -> Pos -> Pos
 wrap w (Tuple x y) = Tuple (x `mod` w) (y `mod` w)
-
-move :: Int -> Int -> Pattern -> Pattern
-move x y = map (_ + Tuple x y)

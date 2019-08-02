@@ -1,6 +1,9 @@
 module GameOfLife.Pattern.StillLife where
 
-import Data.Tuple (Tuple (Tuple))
+import Prelude ((<=), ($), (+), (-), otherwise)
+
+import Data.Array (concat)
+import Data.Tuple (Tuple(Tuple))
 
 import GameOfLife.Type (Pattern)
 
@@ -29,6 +32,16 @@ airclaftCarrier = [ Tuple 0 0, Tuple 1 0, Tuple 0 1, Tuple 3 1, Tuple 2 2, Tuple
 
 barge :: Pattern
 barge = [ Tuple 1 0, Tuple 0 1, Tuple 2 1, Tuple 1 2, Tuple 3 2, Tuple 2 3 ]
+
+snake :: Pattern
+snake = snake' 0
+
+snake' :: Int -> Pattern
+snake' n = concat [ additional n, [ Tuple 0 0, Tuple 0 1, Tuple 1 0, Tuple (3 + n) (1 + n), Tuple (3 + n) n ] ]
+  where
+    additional n'
+      | n' <= 0   = [ Tuple 0 0, Tuple 0 1, Tuple 1 0, Tuple 2 1 ]
+      | otherwise = concat [ additional $ n' - 1, [ Tuple (2 + n) (1 + n) ] ]
 
 
 -- 7 cells

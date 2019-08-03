@@ -36,14 +36,16 @@ barge = [ Tuple 1 0, Tuple 0 1, Tuple 2 1, Tuple 1 2, Tuple 3 2, Tuple 2 3 ]
 snake :: Pattern
 snake = snake' 0
 
-snake' :: Int -> Pattern
-snake' n = concat [ additional n, [ Tuple 0 0, Tuple 0 1, Tuple 1 0, Tuple (3 + n) (1 + n), Tuple (3 + n) n ] ]
-  where
-    additional n'
-      | n' <= 0   = [ Tuple 0 0, Tuple 0 1, Tuple 1 0, Tuple 2 1 ]
-      | otherwise = concat [ additional $ n' - 1, [ Tuple (2 + n) (1 + n) ] ]
-
 
 -- 7 cells
 loaf :: Pattern
 loaf = [ Tuple 1 0, Tuple 2 0, Tuple 0 1, Tuple 3 1, Tuple 1 2, Tuple 3 2, Tuple 2 3 ]
+
+
+-- N cells
+snake' :: Int -> Pattern
+snake' n = concat [ additional n, [ Tuple 0 0, Tuple 0 1, Tuple 1 0, Tuple 2 1, Tuple (3 + n) n, Tuple (3 + n) (n + 1) ] ]
+  where
+    additional n'
+      | n' <= 0   = []
+      | otherwise = concat [ additional $ n' - 1, [ Tuple (2 + n') (1 + n') ] ]

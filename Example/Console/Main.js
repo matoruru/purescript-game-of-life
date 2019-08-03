@@ -1,7 +1,22 @@
-exports.consoleClear = console.clear;
+exports.consoleClear
+  = console.clear;
 
-exports.logNoNewlineImpl = function (s) { process.stdout.write(s); };
+exports.cursorToImpl
+  = function (x, y) {
+      require('readline').cursorTo(process.stdout, x, y);
+    };
 
-exports.getRows = function () { return process.stdout.rows };
+exports.logNoNewlineImpl
+  = function (s) {
+      process.stdout.write(s);
+    };
 
-exports.getColumns = function () { return process.stdout.columns };
+exports.getRows
+  = function () {
+      return process.stdout.rows - 1;
+    };
+
+exports.getColumns
+  = function () {
+      return process.stdout.columns;
+    };

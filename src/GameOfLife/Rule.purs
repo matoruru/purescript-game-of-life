@@ -16,7 +16,7 @@ nextGen fs lives = concat >>> nubEq $ [ keeps, births ]
     births = filter (score fs lives >>> (==) 3) $ map (neighbors fs) >>> concat $ lives
 
 score :: FieldSize -> Pattern -> Pos -> Int
-score fs lives = length <<< intersect lives <<< neighbors fs
+score fs lives = neighbors fs >>> intersect lives >>> length
 
 neighbors :: FieldSize -> Pos -> Pattern
 neighbors fs (Tuple x y) = [ Tuple (x-1) (y-1), Tuple x (y-1), Tuple (x+1) (y-1)

@@ -29,34 +29,34 @@ foreign import getRows :: Effect Int
 foreign import getColumns :: Effect Int
 
 main :: Effect Unit
-main = consoleClear *> loop field
+main = consoleClear *> loop pattern
 
 loop :: Pattern -> Effect Unit
 loop ps = do
   fs  <- fieldSize
   ps' <- pure $ map (wrap fs) ps
-  _   <- setTimeout 10 $ cursorTo 0 0 *> showPattern fs ps' *> loop (nextGen fs ps')
+  _   <- setTimeout 50 $ cursorTo 0 0 *> showField fs ps' *> loop (nextGen fs ps')
   pure unit
 
 fieldSize :: Effect FieldSize
 fieldSize = do
   w <- getColumns
   h <- getRows
-  pure { w: w - 2, h: h - 2 }
+  pure { w: w - 4, h: h - 2 }
 
-field :: Pattern
-field = concat
+pattern :: Pattern
+pattern = concat
         [ move 30 30 $ P.snake' 8
         , move 36 30   P.snake
         , move 85 35   P.nebula
         , move 25  4   P.glider
         ]
 
-showPattern :: FieldSize -> Pattern -> Effect Unit
-showPattern fs ps = foreachE lines logNoNewline
+showField :: FieldSize -> Pattern -> Effect Unit
+showField fs ps = foreachE field logNoNewline
   where
-    lines = "\n " : (map line <<< wholeBoard $ fs)
-    line  = getCell ps <> newLine fs
+    field = "\n  " : (map cell <<< wholeBoard $ fs)
+    cell  = getCell ps <> newLine fs
 
 getCell :: Pattern -> Pos -> String
 getCell ps p = case swap p `elem` ps of
@@ -65,7 +65,7 @@ getCell ps p = case swap p `elem` ps of
 
 newLine :: FieldSize -> Pos -> String
 newLine fs p = case snd p == fs.w - 1 of
-                true  -> "\n "
+                true  -> "\n  "
                 false -> ""
 
 wholeBoard :: FieldSize -> Pattern

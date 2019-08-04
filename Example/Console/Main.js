@@ -13,7 +13,7 @@ exports.logNoNewlineImpl
 
 exports.getRows
   = function () {
-      return process.stdout.rows - 1;
+      return process.stdout.rows;
     };
 
 exports.getColumns

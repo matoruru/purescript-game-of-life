@@ -2,7 +2,7 @@ module Example.Console.Main (main) where
 
 import Prelude
 
-import Data.Array (concat, elem, sort, (..))
+import Data.Array (concat, elem, sort, (..), (:))
 import Data.Tuple (Tuple(..), snd, swap)
 import Effect (Effect, foreachE)
 import Effect.Timer (setTimeout)
@@ -35,24 +35,28 @@ loop :: Pattern -> Effect Unit
 loop ps = do
   fs  <- fieldSize
   ps' <- pure $ map (wrap fs) ps
-  _   <- setTimeout 100 $ cursorTo 0 0 *> showPattern fs ps' *> loop (nextGen fs ps')
+  _   <- setTimeout 10 $ cursorTo 0 0 *> showPattern fs ps' *> loop (nextGen fs ps')
   pure unit
 
 fieldSize :: Effect FieldSize
-fieldSize = { w: _, h: _ } <$> getColumns <*> getRows
+fieldSize = do
+  w <- getColumns
+  h <- getRows
+  pure { w: w - 2, h: h - 2 }
 
 field :: Pattern
 field = concat
-        [ move 10 30 P.glider
-        , move 5  7  P.glider
-        , move 50 78 P.nebula
-        , move 70 88 P.pulsar
-        , move 30 30 P.airclaftCarrier
-        , move 27 20 P.beeHive
+        [ move 30 30 $ P.snake' 8
+        , move 36 30   P.snake
+        , move 85 35   P.nebula
+        , move 25  4   P.glider
         ]
 
 showPattern :: FieldSize -> Pattern -> Effect Unit
-showPattern fs ps = foreachE (map (getCell ps <> newLine fs) <<< wholeBoard $ fs) logNoNewline
+showPattern fs ps = foreachE lines logNoNewline
+  where
+    lines = "\n " : (map line <<< wholeBoard $ fs)
+    line  = getCell ps <> newLine fs
 
 getCell :: Pattern -> Pos -> String
 getCell ps p = case swap p `elem` ps of
@@ -61,7 +65,7 @@ getCell ps p = case swap p `elem` ps of
 
 newLine :: FieldSize -> Pos -> String
 newLine fs p = case snd p == fs.w - 1 of
-                true  -> "\n"
+                true  -> "\n "
                 false -> ""
 
 wholeBoard :: FieldSize -> Pattern

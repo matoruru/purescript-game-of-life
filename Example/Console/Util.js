@@ -6,7 +6,7 @@ exports.cursorToImpl
       require('readline').cursorTo(process.stdout, x, y);
     };
 
-exports.logNoNewlineImpl
+exports.logImpl
   = function (s) {
       process.stdout.write(s);
     };

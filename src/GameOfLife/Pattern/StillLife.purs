@@ -42,6 +42,11 @@ loaf :: Pattern
 loaf = [ Tuple 1 0, Tuple 2 0, Tuple 0 1, Tuple 3 1, Tuple 1 2, Tuple 3 2, Tuple 2 3 ]
 
 
+-- 8 cells
+pond :: Pattern
+pond = [ Tuple 1 0, Tuple 0 2, Tuple 1 3, Tuple 3 2, Tuple 2 0, Tuple 3 1, Tuple 0 1, Tuple 2 3 ]
+
+
 -- N cells
 snake' :: Int -> Pattern
 snake' n = concat [ additional n, [ Tuple 0 0, Tuple 0 1, Tuple 1 0, Tuple 2 1, Tuple (3 + n) n, Tuple (3 + n) (n + 1) ] ]
@@ -49,6 +54,3 @@ snake' n = concat [ additional n, [ Tuple 0 0, Tuple 0 1, Tuple 1 0, Tuple 2 1, 
     additional n'
       | n' <= 0   = []
       | otherwise = concat [ additional $ n' - 1, [ Tuple (2 + n') (1 + n') ] ]
-
-pond :: Pattern
-pond = [ Tuple 1 0, Tuple 0 2,Tuple 1 3,Tuple 3 2,Tuple 2 0,Tuple 3 1,Tuple 0 1,Tuple 2 3 ]

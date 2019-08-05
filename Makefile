@@ -5,4 +5,4 @@ clean:
 	rm -rf output/
 
 run:
-	spago run -p Example/Console/Main.purs -m Example.Console.Main
+	spago run -m Example.Console.Main -p Example/Console/*.purs

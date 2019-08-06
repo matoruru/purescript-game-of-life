@@ -16,25 +16,21 @@ main :: Effect Unit
 main = do
   fs <- fieldSize
   consoleClear
-  fieldInit fs
-  loop fs pattern
+  fieldInit fs "□"
+  replace (diff [] pattern)
+  _  <- setTimeout 1000 $ loop fs pattern
+  pure unit
 
 loop :: FieldSize -> Pattern -> Effect Unit
-loop fs ps = do
-  next <- nextGen fs ps # pure
-  _    <- setTimeout 50 $ replace (diff ps next) *> loop fs next
+loop fs curr = do
+  next <- nextGen fs curr # pure
+  _    <- setTimeout 30 $ replace (diff curr next) *> loop fs next
   pure unit
 
 pattern :: Pattern
 pattern = concat
         [ move 50 50 P.acorn
         ]
-
-fieldSize :: Effect FieldSize
-fieldSize = { w: _, h: _ } <$> getColumns <*> getRows
-
-fieldInit :: FieldSize -> Effect Unit
-fieldInit fs = foreachE (0 .. fs.w) \x -> foreachE (0 .. fs.h) \y -> logTo (Tuple x y) "□"
 
 replace :: Diff -> Effect Unit
 replace d = do

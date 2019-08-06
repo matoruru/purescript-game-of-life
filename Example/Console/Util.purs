@@ -1,6 +1,8 @@
 module Example.Console.Util
   ( consoleClear
   , cursorTo
+  , fieldInit
+  , fieldSize
   , getColumns
   , getRows
   , logTo
@@ -8,10 +10,11 @@ module Example.Console.Util
 
 import Prelude
 
+import Data.Array ((..))
 import Data.Tuple (Tuple(..))
-import Effect (Effect)
+import Effect (Effect, foreachE)
 import Effect.Uncurried (EffectFn1, EffectFn2, runEffectFn1, runEffectFn2)
-import GameOfLife.Type (Pos)
+import GameOfLife.Type (Pos, FieldSize)
 
 foreign import consoleClear :: Effect Unit
 
@@ -31,3 +34,9 @@ logTo (Tuple x y) c = cursorTo x y *> log' c
 foreign import getRows :: Effect Int
 
 foreign import getColumns :: Effect Int
+
+fieldSize :: Effect FieldSize
+fieldSize = { w: _, h: _ } <$> getColumns <*> getRows
+
+fieldInit :: FieldSize -> String -> Effect Unit
+fieldInit fs s = foreachE (0 .. fs.w) \x -> foreachE (0 .. fs.h) \y -> logTo (Tuple x y) s

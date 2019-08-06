@@ -35,10 +35,10 @@ pattern = concat
 
 replace :: Diff' -> Effect Unit
 replace d = do
-  foreachE d.dead       <<< flip logTo $ color Black "□"
-  foreachE d.alive      <<< flip logTo $ color Green "■"
-  foreachE d.willDead   <<< flip logTo $ color Red   "■"
-  foreachE d.willAlive  <<< flip logTo $ color Blue  "□"
+  foreachE d.dead      <<< flip logTo $ color Black "□"
+  foreachE d.alive     <<< flip logTo $ color Green "■"
+  foreachE d.willDead  <<< flip logTo $ color Red   "■"
+  foreachE d.willAlive <<< flip logTo $ color Blue  "□"
 
 color :: Color -> String -> String
 color = (<>) <<< case _ of

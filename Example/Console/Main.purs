@@ -2,15 +2,14 @@ module Example.Console.Main (main) where
 
 import Prelude
 
-import Data.Array (concat, (..))
-import Data.Tuple (Tuple(..))
+import Data.Array (concat)
 import Effect (Effect, foreachE)
 import Effect.Timer (setTimeout)
-import Example.Console.Util (consoleClear, getColumns, getRows, logTo)
+import Example.Console.Util (consoleClear, fieldInit, fieldSize, logTo)
 import GameOfLife.Pattern as P
 import GameOfLife.Rule (nextGen)
 import GameOfLife.Type (Diff, FieldSize, Pattern)
-import GameOfLife.Util (diff, move)
+import GameOfLife.Util (diff)
 
 main :: Effect Unit
 main = do
@@ -29,7 +28,7 @@ loop fs curr = do
 
 pattern :: Pattern
 pattern = concat
-        [ move 50 50 P.acorn
+        [ P.gliderGun
         ]
 
 replace :: Diff -> Effect Unit

@@ -1,9 +1,14 @@
 exports.consoleClear
   = console.clear;
 
+exports.readline
+  = function () {
+      return require('readline');
+    };
+
 exports.cursorToImpl
-  = function (x, y) {
-      require('readline').cursorTo(process.stdout, x, y);
+  = function (readline, x, y) {
+      readline.cursorTo(process.stdout, x, y);
     };
 
 exports.logImpl

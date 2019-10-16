@@ -2,12 +2,11 @@ module Example.Console.Main (main) where
 
 import Prelude
 
-import Data.Array (concat)
 import Effect (Effect, foreachE)
 import Effect.Aff (Aff, Milliseconds(..), delay, forkAff, joinFiber, launchAff_)
 import Effect.Class (liftEffect)
 import Example.Console.Util (Readline, consoleClear, fieldInit, fieldSize, logTo, readline)
-import GameOfLife.Pattern as P
+import Example.Console.Preference
 import GameOfLife.Type (Diff, FieldSize, Pattern)
 import GameOfLife.Util (diff, nextGen)
 
@@ -19,7 +18,7 @@ main = do
   consoleClear
   fieldInit rl fs "□"
 
-  launchAff_ $ loop rl fs (Milliseconds 1000.0) [] pattern
+  launchAff_ $ loop rl fs (Milliseconds initialDelay) [] pattern
 
 loop :: Readline -> FieldSize -> Milliseconds -> Pattern -> Pattern -> Aff Unit
 loop rl fs t prev curr = do
@@ -29,12 +28,7 @@ loop rl fs t prev curr = do
   -- Wait all fibers finish
   next <- (\f _ -> f) <$> joinFiber f1 <*> joinFiber f2
 
-  delay t *> loop rl fs (Milliseconds 0.0) curr next
-
-pattern :: Pattern
-pattern = concat
-        [ P.gliderGun
-        ]
+  delay t *> loop rl fs (Milliseconds everyDelay) curr next
 
 replace :: Readline -> Diff -> Aff Unit
 replace rl d = do

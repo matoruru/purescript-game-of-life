@@ -1,56 +1,70 @@
 module GameOfLife.Pattern.StillLife where
 
-import Prelude ((<=), ($), (+), (-), otherwise)
-
-import Data.Array (concat)
-import Data.Tuple (Tuple(Tuple))
-
+import Data.Symbol (SProxy(..))
+import GameOfLife.Pattern.Util (toPattern)
 import GameOfLife.Type (Pattern)
 
--- 4 cells
 block :: Pattern
-block = [ Tuple 0 0, Tuple 1 0, Tuple 0 1, Tuple 1 1 ]
+block = toPattern
+  ( SProxy :: SProxy """**
+                        **"""
+  )
 
 tub :: Pattern
-tub = [ Tuple 1 0, Tuple 0 1, Tuple 2 1, Tuple 1 2 ]
+tub = toPattern
+  ( SProxy :: SProxy """_*
+                        *_*
+                        _*"""
+  )
 
-
--- 5 cells
 boat :: Pattern
-boat = [ Tuple 0 0, Tuple 1 0, Tuple 0 1, Tuple 2 1, Tuple 1 2 ]
+boat = toPattern
+  ( SProxy :: SProxy """**
+                        *_*
+                        _*"""
+  )
 
-
--- 6 cells
 beeHive :: Pattern
-beeHive = [ Tuple 1 0, Tuple 2 0, Tuple 0 1, Tuple 3 1, Tuple 1 2, Tuple 2 2 ]
+beeHive = toPattern
+  ( SProxy :: SProxy """_**
+                        *__*
+                        _**"""
+  )
 
 ship :: Pattern
-ship = [ Tuple 1 0, Tuple 2 0, Tuple 0 1, Tuple 2 1, Tuple 0 2, Tuple 1 2 ]
+ship = toPattern
+  ( SProxy :: SProxy """_**
+                        *_*
+                        **"""
+  )
 
 airclaftCarrier :: Pattern
-airclaftCarrier = [ Tuple 0 0, Tuple 1 0, Tuple 0 1, Tuple 3 1, Tuple 2 2, Tuple 3 2 ]
+airclaftCarrier = toPattern
+  ( SProxy :: SProxy """**
+                        *__*
+                        __**"""
+  )
 
 barge :: Pattern
-barge = [ Tuple 1 0, Tuple 0 1, Tuple 2 1, Tuple 1 2, Tuple 3 2, Tuple 2 3 ]
+barge = toPattern
+  ( SProxy :: SProxy """_*
+                        *_*
+                        _*_*
+                        __*"""
+  )
 
-snake :: Pattern
-snake = snake' 0
-
-
--- 7 cells
 loaf :: Pattern
-loaf = [ Tuple 1 0, Tuple 2 0, Tuple 0 1, Tuple 3 1, Tuple 1 2, Tuple 3 2, Tuple 2 3 ]
+loaf = toPattern
+  ( SProxy :: SProxy """_**
+                        *__*
+                        _*_*
+                        __*"""
+  )
 
-
--- 8 cells
 pond :: Pattern
-pond = [ Tuple 1 0, Tuple 0 2, Tuple 1 3, Tuple 3 2, Tuple 2 0, Tuple 3 1, Tuple 0 1, Tuple 2 3 ]
-
-
--- N cells
-snake' :: Int -> Pattern
-snake' n = concat [ additional n, [ Tuple 0 0, Tuple 0 1, Tuple 1 0, Tuple 2 1, Tuple (3 + n) n, Tuple (3 + n) (n + 1) ] ]
-  where
-    additional n'
-      | n' <= 0   = []
-      | otherwise = concat [ additional $ n' - 1, [ Tuple (2 + n') (1 + n') ] ]
+pond = toPattern
+  ( SProxy :: SProxy """_**
+                        *__*
+                        *__*
+                        _**"""
+  )

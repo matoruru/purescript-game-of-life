@@ -1,5 +1,5 @@
 module GameOfLife.Rule
-  ( nextGen
+  ( nextGen'
   , wrap
   ) where
 
@@ -7,13 +7,12 @@ import Prelude
 
 import Data.Array (concat, filter, intersect, length, nubEq)
 import Data.Tuple (Tuple(..))
-import GameOfLife.Type (Pos, FieldSize, Pattern)
+import GameOfLife.Type (NextState(..), FieldSize, Pattern, Pos)
 
-nextGen :: FieldSize -> Pattern -> Pattern
-nextGen fs lives = concat >>> nubEq $ [ keeps, births ]
-  where
-    keeps  = filter (score fs lives >>> (==) 2) lives
-    births = filter (score fs lives >>> (==) 3) $ map (neighbors fs) >>> concat $ lives
+nextGen' :: NextState -> FieldSize -> Pattern -> Pattern
+nextGen' All   fs lives = concat >>> nubEq $ [ nextGen' Keep fs lives, nextGen' Birth fs lives ]
+nextGen' Keep  fs lives = filter (score fs lives >>> (==) 2) lives
+nextGen' Birth fs lives = filter (score fs lives >>> (==) 3) $ map (neighbors fs) >>> concat $ lives
 
 score :: FieldSize -> Pattern -> Pos -> Int
 score fs lives = neighbors fs >>> intersect lives >>> length

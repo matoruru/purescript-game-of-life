@@ -7,9 +7,8 @@ import Effect (Effect, foreachE)
 import Effect.Timer (setTimeout)
 import Example.Console.Util (Readline, consoleClear, fieldInit, fieldSize, logTo, readline)
 import GameOfLife.Pattern as P
-import GameOfLife.Rule (nextGen)
 import GameOfLife.Type (Diff', FieldSize, Pattern)
-import GameOfLife.Util (diff', move)
+import GameOfLife.Util (diff', nextGen)
 
 data Color = Black | Green | Red | Blue
 

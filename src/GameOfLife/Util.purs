@@ -3,6 +3,7 @@ module GameOfLife.Util
   , diff'
   , move
   , move'
+  , nextGen
   , nGen
   ) where
 
@@ -10,14 +11,17 @@ import Prelude
 
 import Data.Array (difference)
 import Data.Tuple (Tuple(..))
-import GameOfLife.Rule (nextGen)
-import GameOfLife.Type (FieldSize, Pattern, Pos, Diff, Diff')
+import GameOfLife.Rule (nextGen')
+import GameOfLife.Type (Diff, Diff', NextState(..), FieldSize, Pattern, Pos)
 
 move :: Int -> Int -> Pattern -> Pattern
 move x y = map (_ + Tuple x y)
 
 move' :: Pos -> Pattern -> Pattern
 move' p = map (_ + p)
+
+nextGen :: FieldSize -> Pattern -> Pattern
+nextGen fs lives = nextGen' All fs lives
 
 nGen :: FieldSize -> Int -> Pattern -> Pattern
 nGen fs n ps

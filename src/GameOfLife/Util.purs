@@ -1,6 +1,8 @@
 module GameOfLife.Util
   ( diff
   , diff'
+  , flipH
+  , flipV
   , move
   , move'
   , nextGen
@@ -10,7 +12,9 @@ module GameOfLife.Util
 import Prelude
 
 import Data.Array (difference)
-import Data.Tuple (Tuple(..))
+import Data.Foldable (maximum, minimum)
+import Data.Maybe (fromMaybe)
+import Data.Tuple (Tuple(..), snd, swap)
 import GameOfLife.Rule (nextGen')
 import GameOfLife.Type (Diff, Diff', NextState(..), FieldSize, Pattern, Pos)
 
@@ -19,6 +23,14 @@ move x y = map (_ + Tuple x y)
 
 move' :: Pos -> Pattern -> Pattern
 move' p = map (_ + p)
+
+flipH :: Pattern -> Pattern
+flipH = map swap <<< flipV <<< map swap
+
+flipV :: Pattern -> Pattern
+flipV ps = map (\(Tuple x y) -> Tuple x $ maxDiff ps + negate y) ps
+  where
+    maxDiff = map snd >>> (maximum >>> fromMaybe 0 + minimum >>> fromMaybe 0)
 
 nextGen :: FieldSize -> Pattern -> Pattern
 nextGen fs lives = nextGen' All fs lives
@@ -36,8 +48,8 @@ diff curr next =
 
 diff' :: Pattern -> Pattern -> Pattern -> Diff'
 diff' prev curr next =
-  { dead      : difference prev curr
-  , willDead  : difference curr next
-  , alive     : difference curr prev
-  , willAlive : difference next curr
+  { dead     : difference prev curr
+  , willDead : difference curr next
+  , alive    : difference curr prev
+  , willAlive: difference next curr
   }

@@ -3,6 +3,7 @@ module GameOfLife.Pattern.Internal where
 import Prelude ((+))
 
 import Prim.Symbol (class Append, class Cons)
+import Prim.TypeError (class Fail, Text)
 
 import Type.Equality (class TypeEquals)
 
@@ -60,6 +61,10 @@ else instance symbolToCellListImpl
 class CharToCell (i :: Symbol) (o :: Cell) (n1 :: Nat) (n2 :: Nat) | i n1 n2 -> o
 instance      matchUnderScore :: CharToCell "_" Dead n1 n2
 else instance matchAsterisk   :: CharToCell "*" (Alive n1 n2) n1 n2
+else instance matchUnexpected
+  :: ( Append "Unexpected symbol \"" a mes, Append mes "\" found." mes'
+     , Fail (Text mes')
+     ) => CharToCell a b c d
 
 class RemoveSpace (i :: Symbol) (o :: Symbol) | i -> o
 instance removeSpace :: ( Cons h t i, RemoveSpaceImpl h t o ) => RemoveSpace i o

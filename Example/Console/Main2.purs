@@ -5,7 +5,7 @@ import Prelude
 import Effect (Effect, foreachE)
 import Effect.Aff (Aff, Milliseconds(..), delay, forkAff, joinFiber, launchAff_)
 import Effect.Class (liftEffect)
-import Example.Console.Preference (everyDelay, initialDelay, pattern)
+import Example.Console.Preference as Config
 import Example.Console.Util (Readline, consoleClear, fieldInit, fieldSize, logTo, readline)
 import GameOfLife.Type (Diff', FieldSize, Pattern)
 import GameOfLife.Util (diff', nextGen)
@@ -20,7 +20,7 @@ main = do
   consoleClear
   fieldInit rl fs $ color Black "□"
 
-  launchAff_ $ loop rl fs (Milliseconds initialDelay) [] [] pattern
+  launchAff_ $ loop rl fs (Milliseconds Config.initialDelay) [] [] Config.pattern
 
 loop :: Readline -> FieldSize -> Milliseconds -> Pattern -> Pattern -> Pattern -> Aff Unit
 loop rl fs t prev curr next = do
@@ -31,7 +31,7 @@ loop rl fs t prev curr next = do
   next' <- joinFiber f1
   _     <- joinFiber f2
 
-  delay t *> loop rl fs (Milliseconds everyDelay) curr next next'
+  delay t *> loop rl fs (Milliseconds Config.everyDelay) curr next next'
 
 replace :: Readline -> Diff' -> Aff Unit
 replace rl d = do

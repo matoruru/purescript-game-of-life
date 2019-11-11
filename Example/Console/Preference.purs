@@ -12,5 +12,5 @@ everyDelay = 50.0
 
 pattern :: Pattern
 pattern = concat
-        [ P.gliderGun
-        ]
+  [ P.gliderGun
+  ]

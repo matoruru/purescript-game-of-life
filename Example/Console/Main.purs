@@ -5,8 +5,8 @@ import Prelude
 import Effect (Effect, foreachE)
 import Effect.Aff (Aff, Milliseconds(..), delay, forkAff, joinFiber, launchAff_)
 import Effect.Class (liftEffect)
+import Example.Console.Preference (everyDelay, initialDelay, pattern)
 import Example.Console.Util (Readline, consoleClear, fieldInit, fieldSize, logTo, readline)
-import Example.Console.Preference
 import GameOfLife.Type (Diff, FieldSize, Pattern)
 import GameOfLife.Util (diff, nextGen)
 
@@ -26,7 +26,8 @@ loop rl fs t prev curr = do
   f2 <- forkAff $ replace rl $ diff prev curr
 
   -- Wait all fibers finish
-  next <- (\f _ -> f) <$> joinFiber f1 <*> joinFiber f2
+  next <- joinFiber f1
+  _    <- joinFiber f2
 
   delay t *> loop rl fs (Milliseconds everyDelay) curr next
 
@@ -36,7 +37,8 @@ replace rl d = do
   f2 <- forkAff $ liftEffect $ foreachE d.dead  <<< flip logTo' $ "□"
 
   -- Wait all fibers finish
-  _ <- (\_ _ -> unit) <$> joinFiber f1 <*> joinFiber f2
+  _ <- joinFiber f1
+  _ <- joinFiber f2
 
   mempty
 

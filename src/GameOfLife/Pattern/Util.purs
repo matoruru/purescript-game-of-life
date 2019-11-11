@@ -64,7 +64,7 @@ instance      matchUnderScore :: CharToCell "_" Dead n1 n2
 else instance matchAsterisk   :: CharToCell "*" (Alive n1 n2) n1 n2
 
 class RemoveSpace (i :: Symbol) (o :: Symbol) | i -> o
-instance removeSpace :: ( Cons h t i , RemoveSpaceImpl h t o ) => RemoveSpace i o
+instance removeSpace :: ( Cons h t i, RemoveSpaceImpl h t o ) => RemoveSpace i o
 
 class RemoveSpaceImpl (head :: Symbol) (tail :: Symbol) (o :: Symbol) | head tail -> o
 instance removeSpaceImpl :: ( Cons h t tail, RemoveSpaceImpl h t o ) => RemoveSpaceImpl " " tail o

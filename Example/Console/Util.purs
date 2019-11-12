@@ -12,10 +12,8 @@ module Example.Console.Util
 
 import Prelude
 
-import Data.Array ((..))
 import Data.Tuple (Tuple(..))
-import Effect (Effect, foreachE)
-import Effect.Uncurried (EffectFn1, EffectFn3, runEffectFn1, runEffectFn3)
+import Effect (Effect, forE)
 import GameOfLife.Type (Pos, FieldSize)
 
 data Readline
@@ -24,18 +22,12 @@ foreign import readline :: Effect Readline
 
 foreign import consoleClear :: Effect Unit
 
-foreign import cursorToImpl :: EffectFn3 Readline Int Int Unit
+foreign import cursorTo :: Readline -> Int -> Int -> Effect Unit
 
-cursorTo :: Readline -> Int -> Int -> Effect Unit
-cursorTo = runEffectFn3 cursorToImpl
-
-foreign import logImpl :: EffectFn1 String Unit
-
-log' :: String -> Effect Unit
-log' = runEffectFn1 logImpl
+foreign import logImpl :: String -> Effect Unit
 
 logTo :: Readline -> Pos -> String -> Effect Unit
-logTo rl (Tuple x y) c = cursorTo rl x y *> log' c
+logTo rl (Tuple x y) c = cursorTo rl x y *> logImpl c
 
 foreign import getRows :: Effect Int
 
@@ -45,4 +37,4 @@ fieldSize :: Effect FieldSize
 fieldSize = { w: _, h: _ } <$> getColumns <*> getRows
 
 fieldInit :: Readline -> FieldSize -> String -> Effect Unit
-fieldInit rl fs s = foreachE (0 .. fs.w) \x -> foreachE (0 .. fs.h) \y -> logTo rl (Tuple x y) s
+fieldInit rl fs s = forE 0 fs.w \x -> forE 0 fs.h \y -> logTo rl (Tuple x y) s

@@ -1,4 +1,4 @@
-module Example.Console.Main (main) where
+module Example.Console.Main1 (main) where
 
 import Prelude
 
